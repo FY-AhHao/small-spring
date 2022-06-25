@@ -14,11 +14,14 @@ public class ApiTest {
 
     @Test
     public void testBeanFactory() {
+
+        //0.初始化BeanFactory
+        BeanFactory beanFactory = new BeanFactory();
+
         //1.创建BeanDefinition
         BeanDefinition beanDefinition = new BeanDefinition(new UserService());
 
         //2.注册BeanDefinition
-        BeanFactory beanFactory = new BeanFactory();
         beanFactory.registerBeanDefinition("userService",beanDefinition);
 
         //3.获取bean
