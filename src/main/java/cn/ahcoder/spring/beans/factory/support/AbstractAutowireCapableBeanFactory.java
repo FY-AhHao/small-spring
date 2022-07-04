@@ -1,7 +1,11 @@
 package cn.ahcoder.spring.beans.factory.support;
 
 import cn.ahcoder.spring.beans.BeansException;
+import cn.ahcoder.spring.beans.PropertyValue;
+import cn.ahcoder.spring.beans.PropertyValues;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
+import cn.ahcoder.spring.beans.factory.config.BeanReference;
+import cn.hutool.core.bean.BeanUtil;
 
 import java.lang.reflect.Constructor;
 
@@ -20,6 +24,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             //反射创建bean对象
             bean = createBeanInstance(name, beanDefinition, args);
+
+            //bean属性填充
+            applyPropertyValues(name, bean, beanDefinition);
+
         } catch (Exception e) {
             throw new BeansException("创建" + name + "对象失败", e);
         }
@@ -27,6 +35,34 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         //注册bean对象到单例bean注册中心
         registerSingleton(name, bean);
         return bean;
+    }
+
+    /**
+     * bean属性填充
+     *
+     * @param name
+     * @param bean
+     * @param beanDefinition
+     */
+    protected void applyPropertyValues(String name, Object bean, BeanDefinition beanDefinition) {
+        PropertyValues propertyValues = beanDefinition.getPropertyValues();
+        try {
+            for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
+                String propertyName = propertyValue.getName();
+                Object propertyVal = propertyValue.getValue();
+
+                //判断依赖的属性是否为对象,是的话递归获取依赖的bean对象
+                if (propertyVal instanceof BeanReference) {
+                    String beanName = ((BeanReference) propertyVal).getBeanName();
+                    propertyVal = getBean(beanName);
+                }
+
+                //反射设置属性值
+                BeanUtil.setFieldValue(bean,propertyName,propertyVal);
+            }
+        } catch (Exception e) {
+            throw new BeansException(name + " bean属性填充发生错误", e);
+        }
     }
 
     /**

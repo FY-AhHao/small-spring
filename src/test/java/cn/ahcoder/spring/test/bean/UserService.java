@@ -7,21 +7,27 @@ package cn.ahcoder.spring.test.bean;
  */
 public class UserService {
 
-    private String name;
+    private String testProperty;
 
-    public UserService(String name) {
-        this.name = name;
+    private UserDao userDao;
+
+    public String queryUserInfo(String uid) {
+        return "查询id为" + uid + "的用户: " + userDao.queryUserName(uid) + " testProperty: " + testProperty;
     }
 
-    public String queryUserInfo(String uid){
-        return "查询id为" + uid + "的用户: " + name;
+    public UserDao getUserDao() {
+        return userDao;
     }
 
-    public String getName() {
-        return name;
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getTestProperty() {
+        return testProperty;
+    }
+
+    public void setTestProperty(String testProperty) {
+        this.testProperty = testProperty;
     }
 }
