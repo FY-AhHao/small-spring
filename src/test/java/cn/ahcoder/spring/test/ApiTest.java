@@ -6,8 +6,11 @@ import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
 import cn.ahcoder.spring.beans.factory.config.BeanReference;
 import cn.ahcoder.spring.beans.factory.support.DefaultListableBeanFactory;
 import cn.ahcoder.spring.beans.factory.xml.XmlBeanDefinitionReader;
+import cn.ahcoder.spring.context.support.ClassPathXmlApplicationContext;
 import cn.ahcoder.spring.test.bean.UserDao;
 import cn.ahcoder.spring.test.bean.UserService;
+import cn.ahcoder.spring.test.postProcessor.MyBeanFactoryPostProcessor;
+import cn.ahcoder.spring.test.postProcessor.MyBeanPostProcessor;
 import org.junit.Test;
 
 /**
@@ -57,5 +60,36 @@ public class ApiTest {
         UserService userService = beanFactory.getBean("userService",UserService.class);
         System.out.println(userService.queryUserInfo("333"));
 
+    }
+
+    @Test
+    public void testPostProcessor() {
+        //0.初始化BeanFactory
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+
+        //1.创建xml bean定义读取器
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+
+        //2.加载xml配置文件，注册bean定义
+        xmlBeanDefinitionReader.loadBeanDefinitions("classpath:spring.xml");
+
+        //3.创建BeanFactoryPostProcessor,加载完beanDefinition后调用
+        MyBeanFactoryPostProcessor myBeanFactoryPostProcessor = new MyBeanFactoryPostProcessor();
+        myBeanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
+
+        //4.创建BeanPostProcessor,在bean初始化时被调用
+        MyBeanPostProcessor myBeanPostProcessor = new MyBeanPostProcessor();
+        beanFactory.addBeanPostProcessor(myBeanPostProcessor);
+
+        //5.获取bean
+        UserService userService = beanFactory.getBean("userService",UserService.class);
+        System.out.println(userService.queryUserInfo("333"));
+    }
+
+    @Test
+    public void testApplicationContext() {
+        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:postProcessor.xml");
+        UserService userService = classPathXmlApplicationContext.getBean("userService", UserService.class);
+        System.out.println(userService.queryUserInfo("222"));
     }
 }

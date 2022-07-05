@@ -5,6 +5,7 @@ import cn.ahcoder.spring.beans.PropertyValue;
 import cn.ahcoder.spring.beans.PropertyValues;
 import cn.ahcoder.spring.beans.factory.config.AutowireCapableBeanFactory;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
+import cn.ahcoder.spring.beans.factory.config.BeanPostProcessor;
 import cn.ahcoder.spring.beans.factory.config.BeanReference;
 import cn.hutool.core.bean.BeanUtil;
 
@@ -29,6 +30,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             //bean属性填充
             applyPropertyValues(name, bean, beanDefinition);
 
+            //初始化bean对象
+            bean = initializeBean(name, bean, beanDefinition);
+
         } catch (Exception e) {
             throw new BeansException("创建" + name + "对象失败", e);
         }
@@ -36,6 +40,70 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         //注册bean对象到单例bean注册中心
         registerSingleton(name, bean);
         return bean;
+    }
+
+    /**
+     * 初始化单例bean对象
+     * @param name
+     * @param bean
+     * @param beanDefinition
+     * @return
+     */
+    private Object initializeBean(String name, Object bean, BeanDefinition beanDefinition) {
+        Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(name,bean);
+
+        invokeInitMethod(name,wrappedBean,beanDefinition);
+
+        wrappedBean = applyBeanPostProcessorsAfterInitialization(name,bean);
+
+        return wrappedBean;
+    }
+
+
+    /**
+     * 调用BeanPostProcessor的postProcessBeforeInitialization方法
+     * @param name
+     * @param bean
+     * @return
+     */
+    private Object applyBeanPostProcessorsBeforeInitialization(String name, Object bean) {
+        Object resultBean = bean;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            Object tempResultBean = beanPostProcessor.postProcessBeforeInitialization(name, resultBean);
+            if (tempResultBean == null) {
+                return resultBean;
+            }
+            resultBean = tempResultBean;
+        }
+        return resultBean;
+    }
+
+    /**
+     * 初始化方法
+     * @param name
+     * @param wrappedBean
+     * @param beanDefinition
+     */
+    private void invokeInitMethod(String name, Object wrappedBean, BeanDefinition beanDefinition) {
+        //TODO 暂无实现
+    }
+
+    /**
+     * 调用BeanPostProcessor的postProcessAfterInitialization方法
+     * @param name
+     * @param bean
+     * @return
+     */
+    private Object applyBeanPostProcessorsAfterInitialization(String name, Object bean) {
+        Object resultBean = bean;
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            Object tempResultBean = beanPostProcessor.postProcessAfterInitialization(name, resultBean);
+            if (tempResultBean == null) {
+                return resultBean;
+            }
+            resultBean = tempResultBean;
+        }
+        return resultBean;
     }
 
     /**

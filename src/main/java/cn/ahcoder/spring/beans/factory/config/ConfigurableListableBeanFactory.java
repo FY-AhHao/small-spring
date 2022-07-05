@@ -16,4 +16,8 @@ public interface ConfigurableListableBeanFactory extends AutowireCapableBeanFact
      */
     BeanDefinition getBeanDefinition(String beanName);
 
+    /**
+     * 预实例化单例bean对象
+     */
+    void preInstantiateSingletons();
 }

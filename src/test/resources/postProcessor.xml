@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="userDao" class="cn.ahcoder.spring.test.bean.UserDao"/>
+
+    <bean id="userService" class="cn.ahcoder.spring.test.bean.UserService">
+        <property name="testProperty" value="hello propertyValue"/>
+        <property name="testBeanFactoryPostProcessorProperty" value="hello BeanFactoryPostProcessor"/>
+        <property name="testBeanPostProcessorProperty" value="hello BeanPostProcessor"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <bean id="myBeanFactoryPostProcessor" class="cn.ahcoder.spring.test.postProcessor.MyBeanFactoryPostProcessor"/>
+    <bean id="myBeanPostProcessor" class="cn.ahcoder.spring.test.postProcessor.MyBeanPostProcessor"/>
+
+</beans>

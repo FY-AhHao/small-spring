@@ -9,10 +9,17 @@ public class UserService {
 
     private String testProperty;
 
+    private String testBeanFactoryPostProcessorProperty;
+
+    private String testBeanPostProcessorProperty;
+
     private UserDao userDao;
 
     public String queryUserInfo(String uid) {
-        return "查询id为" + uid + "的用户: " + userDao.queryUserName(uid) + " testProperty: " + testProperty;
+        return "查询id为" + uid + "的用户: " + userDao.queryUserName(uid)
+                + "\n testProperty: " + testProperty
+                + "\n testBeanFactoryPostProcessorProperty: " + testBeanFactoryPostProcessorProperty
+                + "\n testBeanPostProcessorProperty: " + testBeanPostProcessorProperty;
     }
 
     public UserDao getUserDao() {
@@ -29,5 +36,21 @@ public class UserService {
 
     public void setTestProperty(String testProperty) {
         this.testProperty = testProperty;
+    }
+
+    public String getTestBeanFactoryPostProcessorProperty() {
+        return testBeanFactoryPostProcessorProperty;
+    }
+
+    public void setTestBeanFactoryPostProcessorProperty(String testBeanFactoryPostProcessorProperty) {
+        this.testBeanFactoryPostProcessorProperty = testBeanFactoryPostProcessorProperty;
+    }
+
+    public String getTestBeanPostProcessorProperty() {
+        return testBeanPostProcessorProperty;
+    }
+
+    public void setTestBeanPostProcessorProperty(String testBeanPostProcessorProperty) {
+        this.testBeanPostProcessorProperty = testBeanPostProcessorProperty;
     }
 }

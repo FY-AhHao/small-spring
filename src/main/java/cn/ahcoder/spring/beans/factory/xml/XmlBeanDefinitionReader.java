@@ -57,6 +57,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         loadBeanDefinitions(resource);
     }
 
+    @Override
+    public void loadBeanDefinitions(String... configLocations) {
+        for (String configLocation : configLocations) {
+            loadBeanDefinitions(configLocation);
+        }
+    }
+
     /**
      * 解析xml，注册beanDefinition
      * @param inputStream
@@ -103,5 +110,6 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             getRegistry().registerBeanDefinition(beanName,beanDefinition);
         }
     }
+
 
 }

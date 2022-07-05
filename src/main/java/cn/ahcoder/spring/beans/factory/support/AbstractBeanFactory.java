@@ -1,8 +1,11 @@
 package cn.ahcoder.spring.beans.factory.support;
 
-import cn.ahcoder.spring.beans.factory.BeanFactory;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
+import cn.ahcoder.spring.beans.factory.config.BeanPostProcessor;
 import cn.ahcoder.spring.beans.factory.config.ConfigurableBeanFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @description: 抽象bean工厂
@@ -10,6 +13,11 @@ import cn.ahcoder.spring.beans.factory.config.ConfigurableBeanFactory;
  * @date: 2022/6/25
  */
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+
+    /**
+     * beanPostProcessor缓存
+     */
+    private final List<BeanPostProcessor> beanPostProcessorList = new ArrayList<>();
 
     @Override
     public Object getBean(String beanName) {
@@ -67,5 +75,15 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @return
      */
     protected abstract BeanDefinition getBeanDefinition(String beanName);
+
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        beanPostProcessorList.remove(beanPostProcessor);
+        beanPostProcessorList.add(beanPostProcessor);
+    }
+
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return beanPostProcessorList;
+    }
 }
 
