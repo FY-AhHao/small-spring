@@ -2,7 +2,6 @@ package cn.ahcoder.spring.beans.factory.support;
 
 import cn.ahcoder.spring.beans.BeansException;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
-import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 

@@ -2,13 +2,14 @@ package cn.ahcoder.spring.beans.factory.support;
 
 import cn.ahcoder.spring.beans.factory.BeanFactory;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
+import cn.ahcoder.spring.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * @description: 抽象bean工厂
  * @author：AhHao
  * @date: 2022/6/25
  */
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
 
     @Override
     public Object getBean(String beanName) {
@@ -18,6 +19,11 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     @Override
     public Object getBean(String beanName, Object... args) {
         return doGetBean(beanName,args);
+    }
+
+    @Override
+    public <T> T getBean(String beanName, Class<T> clazz) {
+        return (T) getBean(beanName);
     }
 
     /**

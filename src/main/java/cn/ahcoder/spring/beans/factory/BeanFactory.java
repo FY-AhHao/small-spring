@@ -21,4 +21,13 @@ public interface BeanFactory {
      * @return
      */
     Object getBean(String beanName,Object... args);
+
+    /**
+     * 根据名称和类型获取bean
+     * @param beanName
+     * @param clazz
+     * @return
+     * @param <T>
+     */
+    <T> T getBean(String beanName,Class<T> clazz);
 }

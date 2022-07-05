@@ -3,6 +3,7 @@ package cn.ahcoder.spring.beans.factory.support;
 import cn.ahcoder.spring.beans.BeansException;
 import cn.ahcoder.spring.beans.PropertyValue;
 import cn.ahcoder.spring.beans.PropertyValues;
+import cn.ahcoder.spring.beans.factory.config.AutowireCapableBeanFactory;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
 import cn.ahcoder.spring.beans.factory.config.BeanReference;
 import cn.hutool.core.bean.BeanUtil;
@@ -14,7 +15,7 @@ import java.lang.reflect.Constructor;
  * @author：AhHao
  * @date: 2022/6/25
  */
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
     private InstantiationStrategy instantiationStrategy = new SimpleInstantiationStrategy();
 

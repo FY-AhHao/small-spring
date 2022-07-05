@@ -5,6 +5,7 @@ import cn.ahcoder.spring.beans.PropertyValues;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
 import cn.ahcoder.spring.beans.factory.config.BeanReference;
 import cn.ahcoder.spring.beans.factory.support.DefaultListableBeanFactory;
+import cn.ahcoder.spring.beans.factory.xml.XmlBeanDefinitionReader;
 import cn.ahcoder.spring.test.bean.UserDao;
 import cn.ahcoder.spring.test.bean.UserService;
 import org.junit.Test;
@@ -39,5 +40,22 @@ public class ApiTest {
         //5.获取bean
         UserService userService = (UserService) beanFactory.getBean("userService");
         System.out.println(userService.queryUserInfo("333"));
+    }
+
+    @Test
+    public void testResource() {
+        //0.初始化BeanFactory
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+
+        //1.创建xml bean定义读取器
+        XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+
+        //2.加载xml配置文件，注册bean定义
+        xmlBeanDefinitionReader.loadBeanDefinitions("classpath:spring.xml");
+
+        //3.获取bean
+        UserService userService = beanFactory.getBean("userService",UserService.class);
+        System.out.println(userService.queryUserInfo("333"));
+
     }
 }

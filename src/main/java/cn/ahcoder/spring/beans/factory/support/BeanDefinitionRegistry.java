@@ -22,4 +22,17 @@ public interface BeanDefinitionRegistry {
      * @return
      */
     BeanDefinition getBeanDefinition(String beanName);
+
+    /**
+     * 是否存在同名的bean定义
+     * @param beanName
+     * @return
+     */
+    boolean containsBeanDefinition(String beanName);
+
+    /**
+     * 获取全部bean定义名
+     * @return
+     */
+    String[] getBeanDefinitionNames();
 }
