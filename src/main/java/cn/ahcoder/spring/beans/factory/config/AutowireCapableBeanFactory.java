@@ -9,5 +9,19 @@ import cn.ahcoder.spring.beans.factory.BeanFactory;
  */
 public interface AutowireCapableBeanFactory extends BeanFactory {
 
-    //暂时什么都不做
+    /**
+     * bean初始化方法之前调用,可以修改bean对象
+     * @param name
+     * @param bean
+     * @return
+     */
+    Object applyBeanPostProcessorsBeforeInitialization(String name, Object bean);
+
+    /**
+     * bean初始化方法之后调用,可以修改bean对象
+     * @param name
+     * @param bean
+     * @return
+     */
+    Object applyBeanPostProcessorsAfterInitialization(String name, Object bean);
 }

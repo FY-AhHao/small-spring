@@ -1,11 +1,14 @@
 package cn.ahcoder.spring.test.bean;
 
+import cn.ahcoder.spring.beans.factory.DisposableBean;
+import cn.ahcoder.spring.beans.factory.InitializingBean;
+
 /**
  * @description:
  * @author：AhHao
  * @date: 2022/6/25
  */
-public class UserService {
+public class UserService implements InitializingBean, DisposableBean {
 
     private String testProperty;
 
@@ -52,5 +55,15 @@ public class UserService {
 
     public void setTestBeanPostProcessorProperty(String testBeanPostProcessorProperty) {
         this.testBeanPostProcessorProperty = testBeanPostProcessorProperty;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("userService执行destroy方法");
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        System.out.println("userService执行afterPropertiesSet方法");
     }
 }

@@ -1,8 +1,10 @@
 package cn.ahcoder.spring.beans.factory.support;
 
+import cn.ahcoder.spring.beans.factory.DisposableBean;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
 import cn.ahcoder.spring.beans.factory.config.BeanPostProcessor;
 import cn.ahcoder.spring.beans.factory.config.ConfigurableBeanFactory;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,5 +87,19 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     public List<BeanPostProcessor> getBeanPostProcessors() {
         return beanPostProcessorList;
     }
+
+
+    /**
+     * 注册需要做销毁动作的bean对象
+     * @param name
+     * @param bean
+     * @param beanDefinition
+     */
+    protected void registerDisposableBeanIfNecessary(String name, Object bean, BeanDefinition beanDefinition) {
+        if (bean instanceof DisposableBean || StrUtil.isNotBlank(beanDefinition.getDestroyMethodName())) {
+            registerDisposableBean(name,new DisposableBeanAdapter(bean,name,beanDefinition));
+        }
+    }
+
 }
 

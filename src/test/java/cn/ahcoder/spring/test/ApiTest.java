@@ -32,13 +32,13 @@ public class ApiTest {
 
         //3.创建bean属性对象
         PropertyValues propertyValues = new PropertyValues();
-        propertyValues.addPropertyValue(new PropertyValue("testProperty","hello PropertyValue"));
-        propertyValues.addPropertyValue(new PropertyValue("userDao",new BeanReference("userDao")));
+        propertyValues.addPropertyValue(new PropertyValue("testProperty", "hello PropertyValue"));
+        propertyValues.addPropertyValue(new PropertyValue("userDao", new BeanReference("userDao")));
         userServiceBeanDefinition.setPropertyValues(propertyValues);
 
         //4.注册BeanDefinition
-        beanFactory.registerBeanDefinition("userDao",userDaoBeanDefinition);
-        beanFactory.registerBeanDefinition("userService",userServiceBeanDefinition);
+        beanFactory.registerBeanDefinition("userDao", userDaoBeanDefinition);
+        beanFactory.registerBeanDefinition("userService", userServiceBeanDefinition);
 
         //5.获取bean
         UserService userService = (UserService) beanFactory.getBean("userService");
@@ -57,7 +57,7 @@ public class ApiTest {
         xmlBeanDefinitionReader.loadBeanDefinitions("classpath:spring.xml");
 
         //3.获取bean
-        UserService userService = beanFactory.getBean("userService",UserService.class);
+        UserService userService = beanFactory.getBean("userService", UserService.class);
         System.out.println(userService.queryUserInfo("333"));
 
     }
@@ -82,13 +82,23 @@ public class ApiTest {
         beanFactory.addBeanPostProcessor(myBeanPostProcessor);
 
         //5.获取bean
-        UserService userService = beanFactory.getBean("userService",UserService.class);
+        UserService userService = beanFactory.getBean("userService", UserService.class);
         System.out.println(userService.queryUserInfo("333"));
     }
 
     @Test
     public void testApplicationContext() {
         ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:postProcessor.xml");
+        UserService userService = classPathXmlApplicationContext.getBean("userService", UserService.class);
+        System.out.println(userService.queryUserInfo("222"));
+    }
+
+    @Test
+    public void testInitAndDestroyMethod() {
+        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:initAndDestroyMethod.xml");
+        //注册虚拟机关闭钩子
+        classPathXmlApplicationContext.registerShutdownHook();
+
         UserService userService = classPathXmlApplicationContext.getBean("userService", UserService.class);
         System.out.println(userService.queryUserInfo("222"));
     }

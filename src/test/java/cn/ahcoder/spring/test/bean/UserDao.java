@@ -21,4 +21,12 @@ public class UserDao {
     public String queryUserName(String uid){
         return userCache.get(uid);
     }
+
+    public void initMethod(){
+        System.out.println("UserDao执行init-method方法");
+    }
+
+    public void destroyMethod(){
+        System.out.println("UserDao执行destroy-method方法");
+    }
 }
