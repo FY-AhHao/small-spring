@@ -3,6 +3,9 @@ package cn.ahcoder.spring.beans.factory.support;
 import cn.ahcoder.spring.beans.BeansException;
 import cn.ahcoder.spring.beans.PropertyValue;
 import cn.ahcoder.spring.beans.PropertyValues;
+import cn.ahcoder.spring.beans.factory.BeanClassLoaderAware;
+import cn.ahcoder.spring.beans.factory.BeanFactoryAware;
+import cn.ahcoder.spring.beans.factory.BeanNameAware;
 import cn.ahcoder.spring.beans.factory.InitializingBean;
 import cn.ahcoder.spring.beans.factory.config.AutowireCapableBeanFactory;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
@@ -41,13 +44,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
 
         //注册需要做销毁动作的bean对象(实现了DisposableBean接口)
-        registerDisposableBeanIfNecessary(name,bean,beanDefinition);
+        registerDisposableBeanIfNecessary(name, bean, beanDefinition);
 
         //注册bean对象到单例bean注册中心
         registerSingleton(name, bean);
         return bean;
     }
-
 
 
     /**
@@ -59,6 +61,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @return
      */
     protected Object initializeBean(String name, Object bean, BeanDefinition beanDefinition) {
+        invokeAwareMethods(name, bean);
+
         Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(name, bean);
 
         try {
@@ -70,6 +74,20 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         wrappedBean = applyBeanPostProcessorsAfterInitialization(name, bean);
 
         return wrappedBean;
+    }
+
+    private void invokeAwareMethods(String name, Object bean) {
+        if (bean instanceof BeanNameAware) {
+            ((BeanNameAware) bean).setBeanName(name);
+        }
+
+        if (bean instanceof BeanClassLoaderAware) {
+            ((BeanClassLoaderAware) bean).setBeanClassLoader(getBeanClassloader());
+        }
+
+        if (bean instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) bean).setBeanFactory(this);
+        }
     }
 
 

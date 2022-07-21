@@ -1,14 +1,15 @@
 package cn.ahcoder.spring.test.bean;
 
-import cn.ahcoder.spring.beans.factory.DisposableBean;
-import cn.ahcoder.spring.beans.factory.InitializingBean;
+import cn.ahcoder.spring.beans.factory.*;
+import cn.ahcoder.spring.context.ApplicationContext;
+import cn.ahcoder.spring.context.ApplicationContextAware;
 
 /**
  * @description:
  * @author：AhHao
  * @date: 2022/6/25
  */
-public class UserService implements InitializingBean, DisposableBean {
+public class UserService implements InitializingBean, DisposableBean, BeanNameAware, BeanClassLoaderAware, BeanFactoryAware, ApplicationContextAware {
 
     private String testProperty;
 
@@ -65,5 +66,25 @@ public class UserService implements InitializingBean, DisposableBean {
     @Override
     public void afterPropertiesSet() {
         System.out.println("userService执行afterPropertiesSet方法");
+    }
+
+    @Override
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        System.out.println("userService感知beanClassLoader:" + classLoader);
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        System.out.println("userService感知beanFactory:" + beanFactory);
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        System.out.println("userService感知beanName: " + name);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        System.out.println("userService感知application: " + applicationContext);
     }
 }

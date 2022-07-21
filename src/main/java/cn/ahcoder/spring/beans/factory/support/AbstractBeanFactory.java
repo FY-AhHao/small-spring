@@ -4,6 +4,7 @@ import cn.ahcoder.spring.beans.factory.DisposableBean;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
 import cn.ahcoder.spring.beans.factory.config.BeanPostProcessor;
 import cn.ahcoder.spring.beans.factory.config.ConfigurableBeanFactory;
+import cn.ahcoder.spring.util.ClassUtils;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
@@ -21,14 +22,16 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      */
     private final List<BeanPostProcessor> beanPostProcessorList = new ArrayList<>();
 
+    private final ClassLoader beanClassloader = ClassUtils.getDefaultClassLoader();
+
     @Override
     public Object getBean(String beanName) {
-        return doGetBean(beanName,null);
+        return doGetBean(beanName, null);
     }
 
     @Override
     public Object getBean(String beanName, Object... args) {
-        return doGetBean(beanName,args);
+        return doGetBean(beanName, args);
     }
 
     @Override
@@ -38,6 +41,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
     /**
      * 获取bean
+     *
      * @param beanName
      * @param args
      * @return
@@ -53,7 +57,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         //单例bean注册中心没有则获取beanDefinition
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
         //通过beanDefinition去创建单例bean，并放入单例bean注册中心
-        singleton = createBean(beanName, beanDefinition,args);
+        singleton = createBean(beanName, beanDefinition, args);
 
         return singleton;
     }
@@ -89,15 +93,20 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     }
 
 
+    public ClassLoader getBeanClassloader() {
+        return beanClassloader;
+    }
+
     /**
      * 注册需要做销毁动作的bean对象
+     *
      * @param name
      * @param bean
      * @param beanDefinition
      */
     protected void registerDisposableBeanIfNecessary(String name, Object bean, BeanDefinition beanDefinition) {
         if (bean instanceof DisposableBean || StrUtil.isNotBlank(beanDefinition.getDestroyMethodName())) {
-            registerDisposableBean(name,new DisposableBeanAdapter(bean,name,beanDefinition));
+            registerDisposableBean(name, new DisposableBeanAdapter(bean, name, beanDefinition));
         }
     }
 
