@@ -1,6 +1,7 @@
 package cn.ahcoder.spring.beans.factory.support;
 
 import cn.ahcoder.spring.beans.factory.DisposableBean;
+import cn.ahcoder.spring.beans.factory.FactoryBean;
 import cn.ahcoder.spring.beans.factory.config.BeanDefinition;
 import cn.ahcoder.spring.beans.factory.config.BeanPostProcessor;
 import cn.ahcoder.spring.beans.factory.config.ConfigurableBeanFactory;
@@ -15,7 +16,7 @@ import java.util.List;
  * @author：AhHao
  * @date: 2022/6/25
  */
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
 
     /**
      * beanPostProcessor缓存
@@ -51,15 +52,36 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         Object singleton = getSingleton(beanName);
 
         if (singleton != null) {
-            return singleton;
+            return getObjectForBeanInstance(singleton,beanName);
         }
 
         //单例bean注册中心没有则获取beanDefinition
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
         //通过beanDefinition去创建单例bean，并放入单例bean注册中心
-        singleton = createBean(beanName, beanDefinition, args);
+        Object bean = createBean(beanName, beanDefinition, args);
 
-        return singleton;
+        return getObjectForBeanInstance(bean,beanName);
+    }
+
+
+    /**
+     * 返回bean对象
+     * 当传入的bean实例不是factoryBean时直接返回，
+     * 是factoryBean时，调用factoryBean的getObject获取真正的bean对象
+     * @param beanInstance
+     * @param beanName
+     * @return
+     */
+    private Object getObjectForBeanInstance(Object beanInstance, String beanName) {
+        if (!(beanInstance instanceof FactoryBean)) {
+            return beanInstance;
+        }
+
+        Object object = getCachedObjectForFactoryBean(beanName);
+        if (object == null) {
+            object = getObjectFromFactoryBean((FactoryBean) beanInstance, beanName);
+        }
+        return object;
     }
 
     /**
@@ -105,6 +127,10 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @param beanDefinition
      */
     protected void registerDisposableBeanIfNecessary(String name, Object bean, BeanDefinition beanDefinition) {
+        if (!beanDefinition.isSingleton()) {
+            return;
+        }
+
         if (bean instanceof DisposableBean || StrUtil.isNotBlank(beanDefinition.getDestroyMethodName())) {
             registerDisposableBean(name, new DisposableBeanAdapter(bean, name, beanDefinition));
         }

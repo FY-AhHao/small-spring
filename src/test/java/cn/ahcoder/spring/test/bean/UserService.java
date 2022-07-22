@@ -19,8 +19,17 @@ public class UserService implements InitializingBean, DisposableBean, BeanNameAw
 
     private UserDao userDao;
 
+    private IUserDao userDaoProxy;
+
     public String queryUserInfo(String uid) {
         return "查询id为" + uid + "的用户: " + userDao.queryUserName(uid)
+                + "\n testProperty: " + testProperty
+                + "\n testBeanFactoryPostProcessorProperty: " + testBeanFactoryPostProcessorProperty
+                + "\n testBeanPostProcessorProperty: " + testBeanPostProcessorProperty;
+    }
+
+    public String queryUserInfo2(String uid) {
+        return "(factoryBean)查询id为" + uid + "的用户: " + userDaoProxy.queryUserName(uid)
                 + "\n testProperty: " + testProperty
                 + "\n testBeanFactoryPostProcessorProperty: " + testBeanFactoryPostProcessorProperty
                 + "\n testBeanPostProcessorProperty: " + testBeanPostProcessorProperty;
@@ -56,6 +65,15 @@ public class UserService implements InitializingBean, DisposableBean, BeanNameAw
 
     public void setTestBeanPostProcessorProperty(String testBeanPostProcessorProperty) {
         this.testBeanPostProcessorProperty = testBeanPostProcessorProperty;
+    }
+
+
+    public IUserDao getUserDaoProxy() {
+        return userDaoProxy;
+    }
+
+    public void setUserDaoProxy(IUserDao userDaoProxy) {
+        this.userDaoProxy = userDaoProxy;
     }
 
     @Override

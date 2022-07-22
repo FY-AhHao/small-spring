@@ -102,4 +102,26 @@ public class ApiTest {
         UserService userService = classPathXmlApplicationContext.getBean("userService", UserService.class);
         System.out.println(userService.queryUserInfo("222"));
     }
+
+    @Test
+    public void test_prototype() {
+        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:prototype.xml");
+        //注册虚拟机关闭钩子
+        classPathXmlApplicationContext.registerShutdownHook();
+
+        UserService userService1 = classPathXmlApplicationContext.getBean("userService", UserService.class);
+        UserService userService2 = classPathXmlApplicationContext.getBean("userService", UserService.class);
+        System.out.println("userService1 = " + userService1);
+        System.out.println("userService2 = " + userService2);
+    }
+
+    @Test
+    public void testFactoryBean() {
+        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:factoryBean.xml");
+        //注册虚拟机关闭钩子
+        classPathXmlApplicationContext.registerShutdownHook();
+
+        UserService userService = classPathXmlApplicationContext.getBean("userService", UserService.class);
+        System.out.println(userService.queryUserInfo2("333"));
+    }
 }
