@@ -9,6 +9,7 @@ import cn.ahcoder.spring.beans.factory.xml.XmlBeanDefinitionReader;
 import cn.ahcoder.spring.context.support.ClassPathXmlApplicationContext;
 import cn.ahcoder.spring.test.bean.UserDao;
 import cn.ahcoder.spring.test.bean.UserService;
+import cn.ahcoder.spring.test.event.CustomEvent;
 import cn.ahcoder.spring.test.postProcessor.MyBeanFactoryPostProcessor;
 import cn.ahcoder.spring.test.postProcessor.MyBeanPostProcessor;
 import org.junit.Test;
@@ -123,5 +124,12 @@ public class ApiTest {
 
         UserService userService = classPathXmlApplicationContext.getBean("userService", UserService.class);
         System.out.println(userService.queryUserInfo2("333"));
+    }
+
+    @Test
+    public void testEvent() {
+        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:event.xml");
+        classPathXmlApplicationContext.publishEvent(new CustomEvent(classPathXmlApplicationContext,111L,"自定义事件"));
+        classPathXmlApplicationContext.registerShutdownHook();
     }
 }

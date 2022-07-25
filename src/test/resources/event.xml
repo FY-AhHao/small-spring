@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="contextRefreshedEventListener" class="cn.ahcoder.spring.test.event.ContextRefreshedEventListener"/>
+    <bean id="contextClosedEventListener" class="cn.ahcoder.spring.test.event.ContextClosedEventListener"/>
+    <bean id="customEventListener" class="cn.ahcoder.spring.test.event.CustomEventListener"/>
+
+</beans>

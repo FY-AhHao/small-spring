@@ -8,6 +8,6 @@ import cn.ahcoder.spring.beans.factory.ListableBeanFactory;
  * @author：AhHao
  * @date: 2022/7/5
  */
-public interface ApplicationContext extends ListableBeanFactory, HierarchicalBeanFactory {
+public interface ApplicationContext extends ListableBeanFactory, HierarchicalBeanFactory,ApplicationEventPublisher {
 
 }
